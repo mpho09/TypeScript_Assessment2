@@ -13,7 +13,7 @@ import type { Product } from "./01-generic-constraints.ts";
 // TODO: changes should be Partial<Product>; returns Product
 export function updateProduct(product: Product, changes: Partial<Product>): Product {
   // TODO: merge and return
-  return product;
+  return { ...product, ...changes };
 }
 
 /* ---- 2b. Pick ----
