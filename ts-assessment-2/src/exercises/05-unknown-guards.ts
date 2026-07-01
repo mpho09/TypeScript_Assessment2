@@ -17,8 +17,18 @@ export interface User {
  * You may NOT cast with `as User`. Narrow properly. */
 
 // TODO: return type must be `value is User`
-export function isUser(value: unknown): ___ {
+export function isUser(value: unknown): value is User {
   // TODO: check typeof object, not null, and the two fields' types
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  if (typeof (value as User).id !== "number") {
+    return false;
+  }
+  if (typeof (value as User).email !== "string") {
+    return false;
+  }
+  return true;
 }
 
 /* ---- 5b. Safe parse ----
@@ -26,8 +36,12 @@ export function isUser(value: unknown): ___ {
  * returns a User if it is one, or null otherwise. Use isUser. */
 
 // TODO: returns User | null
-export function parseUser(value: unknown): ___ {
+export function parseUser(value: unknown): User | null {
   // TODO
+  if (isUser(value)) {
+    return value;
+  }
+  return null;
 }
 
 /* ---- 5c. assertNever-style guard on a primitive union ----
@@ -39,6 +53,18 @@ export function parseUser(value: unknown): ___ {
 // TODO
 export function toInt(value: string | number): number {
   // TODO
+  if (typeof value === "number") {
+    return value;
+  } else if (typeof value === "string") {
+    const parsed = Number(value);
+    if (isNaN(parsed)) {
+      throw new Error(`Cannot convert "${value}" to number`);
+    }
+    return parsed;
+  } else {
+    // This should never happen, but TypeScript needs a fallback
+    throw new Error(`Unexpected type: ${typeof value}`);
+  }
 }
 
 // These run in the test harness:
